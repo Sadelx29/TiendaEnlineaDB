@@ -1,23 +1,9 @@
-/* ============================================================
-   Proyecto Final - Taller de Bases de Datos 2
-   Script: 06_Respaldo.sql
-   Base de datos: TiendaOnline
-   Objetivo: Generar el archivo .bak
-   ============================================================ */
+
 
 USE master;
 GO
 
--- ============================================================
--- NOTA IMPORTANTE PARA EL CONTENEDOR DOCKER
--- ============================================================
--- Como estás ejecutando SQL Server en un contenedor Docker (Linux), 
--- la ruta de respaldo debe usar formato Linux y apuntar a un directorio
--- existente dentro del contenedor, por defecto: /var/opt/mssql/data/
---
--- Para extraer el archivo .bak a tu máquina anfitriona (tu PC), puedes usar:
--- docker cp <id_del_contenedor>:/var/opt/mssql/data/TiendaOnline.bak ./TiendaOnline.bak
--- ============================================================
+
 
 DECLARE @BackupPath NVARCHAR(500) = '/var/opt/mssql/data/'; 
 DECLARE @BackupFile NVARCHAR(500) = @BackupPath + 'TiendaOnline.bak';
