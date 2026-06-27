@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Servidor de Base de Datos SQL Server
+  tienda_online_db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_tienda_online
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SuperStrongPassword123!
+    ports:
+      - "1434:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  # Interfaz Web de Administracion (DbGate)
+  tienda_online_web:
+    image: dbgate/dbgate
+    container_name: dbgate_manager
+    ports:
+      - "3000:3000"
+    depends_on:
+      - tienda_online_db
+
+volumes:
+  sql_data:
