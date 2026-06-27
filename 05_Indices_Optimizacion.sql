@@ -9,19 +9,6 @@
 USE TiendaOnline;
 GO
 
--- ============================================================
--- INSTRUCCIONES PARA VER LOS PLANES DE EJECUCIÓN (Antes y Después)
--- ============================================================
--- 1. En SQL Server Management Studio (SSMS), presione Ctrl + M 
---    (o haga clic en "Include Actual Execution Plan" en la barra de herramientas).
--- 2. Ejecute las consultas del script 04_Consultas_Complejas.sql ANTES de crear estos índices.
--- 3. Guarde o capture los planes de ejecución resultantes.
--- 4. Ejecute ESTE script (05_Indices_Optimizacion.sql) para crear los índices.
--- 5. Vuelva a ejecutar las consultas del script 04.
--- 6. Compare los planes de ejecución. Debería observar que operaciones costosas 
---    como "Clustered Index Scan" (escaneos completos de tabla) cambian a "Index Seek".
--- ============================================================
-
 /* 
    Optimización 1: Consultas que agrupan y filtran pedidos 
    (Clientes con más compras & Ingresos por mes)
