@@ -112,11 +112,24 @@ Para garantizar la viabilidad y rendimiento de las consultas analiticas descrita
 
 ## 7. Instrucciones de Despliegue en Docker
 
-Procedimiento para instalar, validar y resguardar la base de datos en un entorno de SQL Server en contenedores Docker:
+El proyecto incluye un archivo `docker-compose.yml` configurado para orquestar de manera automatizada tanto el motor de base de datos como una interfaz grafica de administracion.
 
-1. Ejecutar el script `01_Crear_BD.sql` en su totalidad (esta instruccion eliminara la base de datos si ya existe para asegurar una creacion limpia).
-2. Ejecutar de manera consecutiva los scripts `02_Crear_Roles_Permisos.sql`, `03_Insertar_Datos.sql` y `04_Consultas_Complejas.sql`.
-3. Ejecutar el script `05_Indices_Optimizacion.sql`.
-4. Ejecutar el script `06_Respaldo.sql`. Este comando almacenara el archivo backup binario dentro del directorio de montaje de Linux del contenedor (Ruta absoluta: `/var/opt/mssql/data/TiendaOnline.bak`).
-5. Extraer el archivo de respaldo al sistema anfitrion ejecutando localmente:
-   `docker cp <nombre_del_contenedor>:/var/opt/mssql/data/TiendaOnline.bak ./TiendaOnline.bak`
+### 7.1. Levantar el Entorno
+Ejecutar el siguiente comando en la raiz del proyecto para descargar las imagenes y levantar los contenedores en segundo plano:
+```bash
+docker-compose up -d
+```
+Esto inicializara dos servicios concurrentes:
+* **Motor SQL Server 2022**: Accesible a traves del puerto `1434`. (Credenciales preconfiguradas: Usuario `sa`, Contraseña `SuperStrongPassword123!`).
+* **DbGate (Gestor Web)**: Interfaz grafica accesible desde cualquier navegador web en `http://localhost:3000`.
+
+### 7.2. Ejecucion de Scripts y Respaldo
+1. Conectarse al motor a traves de la interfaz web DbGate (`http://localhost:3000`) o utilizar Azure Data Studio / SSMS.
+2. Ejecutar el script `01_Crear_BD.sql` en su totalidad (esto reseteara el esquema base si ya existe).
+3. Ejecutar de manera consecutiva los scripts `02_Crear_Roles_Permisos.sql`, `03_Insertar_Datos.sql` y `04_Consultas_Complejas.sql`.
+4. Ejecutar el script `05_Indices_Optimizacion.sql` (se requiere auditar los planes de ejecucion previos y posteriores a este paso para validar la reduccion de costos).
+5. Ejecutar el script `06_Respaldo.sql` para generar la copia de seguridad. El archivo resultante (`TiendaOnline.bak`) se almacenara en el almacenamiento interno de Linux del contenedor (Ruta: `/var/opt/mssql/data/TiendaOnline.bak`).
+6. Extraer fisicamente el archivo de respaldo al disco duro de Windows ejecutando el siguiente comando en PowerShell:
+   ```bash
+   docker cp sql_tienda_online:/var/opt/mssql/data/TiendaOnline.bak ./TiendaOnline.bak
+   ```
